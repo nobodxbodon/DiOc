@@ -4,7 +4,7 @@ Based on <a href="http://www.silvatechsolutions.com/tech-tips/glassfish-ubuntu-1
 <h2>Pre-conditions</h2></br>
 A droplet with Ubuntu 12.04.3 x64 has been created in DigitalOcean. Login as root by ssh.
 
-<h2>Step One—Install Oracle Java 7</h2>
+<h2>Step One: Install Oracle Java 7</h2>
 Reference <a href="http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html">here</a>
 <pre># sudo add-apt-repository ppa:webupd8team/java</pre>
 
@@ -29,7 +29,7 @@ Java(TM) SE Runtime Environment (build 1.7.0_51-b13)
 Java HotSpot(TM) 64-Bit Server VM (build 24.51-b03, mixed mode)</pre>
 
 
-<h2>Step Two—Install Glassfish 4.0</h2>
+<h2>Step Two: Install Glassfish 4.0</h2>
 Get Glassfish Zip file
 <pre>$ wget download.java.net/glassfish/4.0/release/glassfish-4.0.zip</pre>
 Install unzip first before unpackage to /opt
