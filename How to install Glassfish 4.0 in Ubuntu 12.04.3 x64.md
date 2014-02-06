@@ -1,28 +1,26 @@
 ## How to install Oracle Java 7 and Glassfish 4.0 in Ubuntu 12.04.3 x64
 
-Based on <a href="http://www.silvatechsolutions.com/tech-tips/glassfish-ubuntu-12-04-ubber-quick-install-guide/">Glassfish Ubuntu 12.04 Ubber Quick Install Guide</a>
+There are many tutorials to install OpenJDK and JBoss. This is one on the latest Oracle Java and Glassfish. Hopefully this will make deploying easier for Java EE developers.
 <h2>Pre-conditions</h2></br>
-A droplet with Ubuntu 12.04.3 x64 has been created in DigitalOcean. Login as root by ssh.
+A droplet with Ubuntu 12.04.3 x64 has been created in DigitalOcean. Login as root by ssh. Assuming there's no Java installed before or you have uninstalled them.</br>For this tutorial the droplet has 1G memory, as Java EE servers are quite demanding.
 
 <h2>Step One: Install Oracle Java 7</h2>
-Reference <a href="http://www.ubuntugeek.com/how-to-install-oracle-java-7-in-ubuntu-12-04.html">here</a>
+Add new repository to get Oracle Installer
 <pre># sudo add-apt-repository ppa:webupd8team/java</pre>
-
 
 When you get the following error 
 <pre>sudo: add-apt-repository: command not found</pre>
-You have to install software-properties-common according to <a href="http://linuxg.net/how-to-fix-error-sudo-add-apt-repository-command-not-found/">here</a>
+In order to use add-apt-repository, you need to install python-software-properties:
 <pre>
-# sudo apt-get install software-properties-common
 # sudo apt-get install python-software-properties
 </pre>
-Now you can add repository and install
+Now you can add the new repository and install from Oracle Installer
 <pre>
 # sudo add-apt-repository ppa:webupd8team/java
 # sudo apt-get update
 # sudo apt-get install oracle-java7-installer</pre>
 
-After installing
+After installing, confirm the current Java is Oracle version:
 <pre># java -version
 java version "1.7.0_51"
 Java(TM) SE Runtime Environment (build 1.7.0_51-b13)
@@ -36,9 +34,12 @@ Install unzip first before unpackage to /opt
 <pre># apt-get install unzip
 # unzip glassfish-4.0.zip </pre>
 
+For convenience, add path to asadmin to PATH by adding below to the end of ~/.profile
+<pre>export PATH=/opt/glassfish4/bin:$PATH</pre>
+
 Start the default domain
 <pre>
-/opt# glassfish4/bin/asadmin start-domain
+# asadmin start-domain
 Waiting for domain1 to start ...................
 Successfully started the domain : domain1
 domain  Location: /opt/glassfish4/glassfish/domains/domain1
@@ -47,5 +48,46 @@ Admin Port: 4848
 Command start-domain executed successfully.
 </pre>
 
-Now you can deploy war files as <a href="http://blog.c2b2.co.uk/2013/06/getting-started-with-glassfish-4.html">here</a>
+In order to visit admin page (your_server_id:4848) remotely, need to enable secure admin:
+<pre># asadmin enable-secure-admin
+Enter admin user name>  admin
+Enter admin password for user "admin"> 
+You must restart all running servers for the change in secure admin to take effect.
+Command enable-secure-admin executed successfully.</pre>
+
+Restart domain to make effect of secure admin:
+<pre># asadmin restart-domain
+Successfully restarted the domain
+Command restart-domain executed successfully.</pre>
+
+Now you can visit admin page (your_server_id:4848) in browser</br>
+
+To stop the default domain:
+<pre># asadmin stop-domain
+Waiting for the domain to stop .
+Command stop-domain executed successfully.</pre>
+
+<h2>Demo service: deploy hello.war on Glassfish</h2>
+Download the sample application from Glassfish official samples:
+<pre># wget https://glassfish.java.net/downloads/quickstart/hello.war</pre>
+Deploy war file:
+<pre># asadmin deploy /home/ee/glassfish/sample/hello.war
+Enter admin user name>  admin
+Enter admin password for user "admin"> 
+Application deployed with name hello.
+Command deploy executed successfully.</pre>
+
+Now you can visit your_server_id:8080/hello</br>
+
+To undeploy:
+<pre># asadmin undeploy hello
+Enter admin user name>  admin
+Enter admin password for user "admin"> 
+Command undeploy executed successfully.</pre>
+
+In order to save typing admin user name and password every time you deploy or undeploy an application, create a password file pwdfile with content:
+<pre>AS_ADMIN_PASSWORD=your_admin_password</pre>
+Add --passwordfile in command:
+<pre># asadmin --passwordfile pwdfile deploy /home/ee/glassfish/sample/hello.war</pre>
+
 
