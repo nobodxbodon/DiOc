@@ -43,7 +43,7 @@ Install unzip first before unpackage to /opt
 For convenience, add path to asadmin to PATH by adding below to the end of ~/.profile
 <pre>export PATH=/opt/glassfish4/bin:$PATH</pre>
 
-Start the default domain
+Start the glassfish server:
 <pre>
 # asadmin start-domain
 Waiting for domain1 to start ...................
@@ -53,8 +53,12 @@ Log File: /opt/glassfish4/glassfish/domains/domain1/logs/server.log
 Admin Port: 4848
 Command start-domain executed successfully.
 </pre>
+A domain is a set of one or more GlassFish Server instances managed by one administration server. 
+Default GlassFish Server’s port number: 8080.
+Default administration server’s port number: 4848.
+Administration user name: admin; password: none.
 
-In order to visit admin page (your_server_id:4848) remotely, need to enable secure admin:
+In order to visit admin page (your_server_id:4848) remotely, you need to enable secure admin:
 <pre># asadmin enable-secure-admin
 Enter admin user name>  admin
 Enter admin password for user "admin"> 
@@ -68,7 +72,7 @@ Command restart-domain executed successfully.</pre>
 
 Now you can visit admin page (your_server_id:4848) in browser</br>
 
-To stop the default domain:
+To stop the GlassFish server:
 <pre># asadmin stop-domain
 Waiting for the domain to stop .
 Command stop-domain executed successfully.</pre>
@@ -85,7 +89,7 @@ Command deploy executed successfully.</pre>
 
 Now you can visit your_server_id:8080/hello</br>
 
-To undeploy:
+To undeploy the application:
 <pre># asadmin undeploy hello
 Enter admin user name>  admin
 Enter admin password for user "admin"> 
@@ -95,5 +99,6 @@ In order to save typing admin user name and password every time you deploy or un
 <pre>AS_ADMIN_PASSWORD=your_admin_password</pre>
 Add --passwordfile in command:
 <pre># asadmin --passwordfile pwdfile deploy /home/ee/glassfish/sample/hello.war</pre>
+Now the prompt for user name/password won't appear.
 
 
